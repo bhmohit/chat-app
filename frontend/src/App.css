@@ -1,0 +1,11 @@
+.App {
+    background: rgb(238,174,202);
+    background: linear-gradient(163deg, rgba(238,174,202,1) 13%, rgba(148,187,233,1) 87%);
+    height: 100vh;
+    overflow: hidden;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}

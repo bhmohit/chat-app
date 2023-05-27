@@ -9,13 +9,16 @@ import {
   InputGroup
 } from '@chakra-ui/react'
 
+
 export default function Login() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
   const handleGuestUser = () => {setEmail("this"); setPassword("that") }
+  const attemptLogin = async () => {
 
+  }
   return (
     <VStack spacing={'1.5rem'}>
       <FormControl isRequired id='email'>
@@ -35,7 +38,7 @@ export default function Login() {
         </InputGroup>
       </FormControl>
       <FormControl>
-        <Button style={{ color: "black", background: "linear-gradient(163deg, rgba(238,174,202,1) 13%, rgba(148,187,233,1) 87%)" }} width="100%">Login</Button>
+        <Button onClick={attemptLogin} style={{ color: "black", background: "linear-gradient(163deg, rgba(238,174,202,1) 13%, rgba(148,187,233,1) 87%)" }} width="100%">Login</Button>
       </FormControl>
       <FormControl>
         <Button onClick={handleGuestUser} width="100%">Guest User Credentials</Button>

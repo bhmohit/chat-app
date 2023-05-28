@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import axios from "axios";
-
+import { useHistory } from "react-router-dom";
 import {
   FormControl,
   FormLabel,
@@ -9,6 +9,7 @@ import {
   Button,
   VStack,
   InputGroup,
+  useToast,
 } from "@chakra-ui/react";
 
 export default function SignUp() {
@@ -18,10 +19,33 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState();
   const [picture, setPicture] = useState();
   const [show, setShow] = useState(false);
+  const history = useHistory();
   const handleClick = () => setShow(!show);
-
+  const toast = useToast();
   const postDetails = () => {};
-  const submitForm = () => {
+  const submitForm = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      toast({
+        title: "Unable to create account.",
+        description: "Input all details",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Unable to create account.",
+        description: "Passwords don't match",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
     axios({
       method: "post",
       url: "http://localhost:3030/api/user/",
@@ -31,9 +55,27 @@ export default function SignUp() {
         password: password,
         picture: picture,
       },
-    }).then(function (response) {
-      console.log(response);
-    });
+    })
+      .then(function (response) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        toast({
+          title: "Account created.",
+          description: "We've created your account for you.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        history.push("/chats");
+      })
+      .catch(function (error) {
+        toast({
+          title: "Unable to create account.",
+          description: "Account already exists",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      });
   };
 
   return (
@@ -81,19 +123,15 @@ export default function SignUp() {
             placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
         </InputGroup>
       </FormControl>
-      <FormControl isRequired id="display-pic">
+      <FormControl id="display-pic">
         <FormLabel>Select Picture</FormLabel>
         <Input
           type="file"
           p={1.5}
           accept="image/*"
+          value={picture}
           onChange={(e) => {
             postDetails(e.target.files[0]);
           }}

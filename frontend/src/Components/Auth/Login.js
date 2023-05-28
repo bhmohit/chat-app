@@ -6,9 +6,10 @@ import {
   InputRightElement,
   Button,
   VStack,
-  InputGroup
+  InputGroup,
+  useToast
 } from '@chakra-ui/react'
-
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState();
@@ -16,8 +17,28 @@ export default function Login() {
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
   const handleGuestUser = () => {setEmail("this"); setPassword("that") }
+  const toast = useToast();
   const attemptLogin = async () => {
-
+    axios({
+      method: "post",
+      url: "http://localhost:3030/api/user/login",
+      data: {
+        email: email,
+        password: password
+      },
+    }).then(function (response) {
+      if (response) {
+        console.log("PASSWORD CORRECT")
+      } else {
+        toast({
+          title: 'Login Unsuccessful',
+          description: "Incorrect Credentials",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+    });
   }
   return (
     <VStack spacing={'1.5rem'}>

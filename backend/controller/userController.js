@@ -50,6 +50,9 @@ const authUser = asyncHandler(async (req, res) => {
       picture: userExists.picture,
       token: generateToken(userExists._id),
     });
+  } else {
+    res.status(400);
+    throw new Error("Could not login");
   }
 });
 

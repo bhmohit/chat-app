@@ -65,8 +65,8 @@ const searchUser = asyncHandler(async (req, res) => {
         ],
       }
     : {};
-  const allUsers = await User.find(usr);
-  const user = await User.find({_id: {$ne: allUsers._id}});
+
+  const user = await User.find(usr).find({_id: {$ne: req.user._id}});
   res.send(user);
 });
 
